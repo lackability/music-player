@@ -29,7 +29,14 @@ int main()
     G::_k_hook = SetWindowsHookEx(WH_KEYBOARD_LL, G::k_Callback1, NULL, 0);
 
     sf::RenderWindow window(sf::VideoMode(1280, 720), "Music");
-    ImGui::SFML::Init(window);
+    ImGui::SFML::Init(window, false);
+
+    //ImGui::GetIO().Fonts->Clear();
+    ImGui::GetIO().Fonts->AddFontFromFileTTF("UbuntuMono-Regular.ttf", 12.f);
+
+    ImGui::SFML::UpdateFontTexture();
+    
+    // import custom font with support with other languages
 
     Playlist::refreshSongs(G::playlists);
 
@@ -45,6 +52,8 @@ int main()
     while (window.isOpen())
     {
         window.setFramerateLimit(60);
+        ImGui::PushFont(ImGui::GetIO().Fonts->Fonts[0]);
+        
 
         sf::Event event;
         while (window.pollEvent(event))
@@ -75,12 +84,17 @@ int main()
         // update volume, song, etc
         G::UpdateCurrentSong();
 
+        ImGui::PopFont();
         window.clear(sf::Color::Black);
+        
 
         ImGui::SFML::Render(window);
 
+        
         window.display();
+        
     }
+
     
     G::ResourceCleanUp();
 
